@@ -1,17 +1,17 @@
 package com.eagles13.rutorrent
 
+import com.eagles13.rutorrent.Requests.TorrentRequest
 import java.util.*
 
 
 /**
  * Created by Joshua on 12/06/2016.
  */
-data class Torrent(val hash: String, val name: String, val location: String, var isDone: Boolean)
-
 
 class ruTorrent(val url: String, val username: String, val password: String) {
     fun getTorrents(): ArrayList<Torrent> {
-        return Request(url + "plugins/rpc/rpc.php", username, password, TorrentRequestProperty.HASH, TorrentRequestProperty.NAME, TorrentRequestProperty.PATH, TorrentRequestProperty.LEFT_BYTES).getTorrents()
+//        url + , username, password
+        return TorrentRequest(Credentials(url, username, password), "plugins/rpc/rpc.php").getTorrents()
     }
 }
 
