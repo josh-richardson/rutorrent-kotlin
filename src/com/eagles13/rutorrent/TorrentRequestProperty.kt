@@ -7,6 +7,8 @@ enum class TorrentRequestProperty(val data: String) {
     HASH("d.get_hash="),
     NAME("d.get_name="),
     PATH("d.get_base_path="),
-    LEFT_BYTES("d.get_left_bytes=")
+    LEFT_BYTES("d.get_left_bytes="),
+    SIZE_BYTES("d.get_size_bytes=")
+
 //    More to be added
 }

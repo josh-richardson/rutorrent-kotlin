@@ -3,7 +3,7 @@ package com.eagles13.rutorrent
 /**
  * Created by Joshua on 02/08/2016.
  */
-data class Torrent(val hash: String, val name: String, val location: String, var isDone: Boolean) {
+data class Torrent(val hash: String, val name: String, val location: String, val size: Long, var isDone: Boolean) {
 //    fun getFiles() : ArrayList<String> {
 ////        val toReturn = ArrayList<String>()
 ////        val doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(InputSource(StringReader(result)))
