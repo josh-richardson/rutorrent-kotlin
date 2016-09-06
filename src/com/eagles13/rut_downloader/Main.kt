@@ -26,11 +26,6 @@ class ruTorrent(val url: String, val username: String, val password: String) {
     }
 }
 
-
-fun getFiles(dir: String) {
-
-}
-
 fun main(args: Array<String>) {
     val downloadDirectory = "D:\\Download"
     val gson = Gson()
@@ -44,22 +39,18 @@ fun main(args: Array<String>) {
             val instance= ruTorrent(details[0], details[1], details[2])
 
             while (true) {
-                instance.getTorrents().forEach {
-//                    tests serialization
+                instance.getTorrents().filter { x -> x.isDone }.forEach {
+//                  tests serialization
                     val rit : Torrent = gson.fromJson(gson.toJson(it), genericType<Torrent>())
                     println(rit)
-
                     if (!downloaded.contains(it) && !downloading.contains(it)) {
                         downloading.add(it)
-
                         val ftp = FTPClient()
                         ftp.connect(details[3])
                         ftp.login(details[4], details[5])
                         ftp.enterLocalPassiveMode()
                         ftp.setFileType(FTP.BINARY_FILE_TYPE)
-
                         println(ftp.replyCode)
-
                         getFilesRecursive(it.location, ftp).forEach { fi, isDirectory ->
                             if (!isDirectory) {
                                 val dlFile = File(downloadDirectory + fi.substring(File(it.location).parent.length).replace("/", System.getProperty("file.separator")))
@@ -68,15 +59,11 @@ fun main(args: Array<String>) {
                                     parent.mkdirs()
                                 }
                                 val stream = BufferedOutputStream(FileOutputStream(dlFile))
-                                println(ftp.retrieveFile(fi, stream))
+                                println("Downloading: " + fi)
+                                println(if (ftp.retrieveFile(fi, stream)) "Success" else "Failure")
                                 stream.close()
                             }
-
                         }
-
-
-
-
                     }
                 }
                 Thread.sleep(5000)
