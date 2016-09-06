@@ -42,10 +42,10 @@ fun main(args: Array<String>) {
             val downloading = ArrayList<Torrent>()
 
             val instance= ruTorrent(details[0], details[1], details[2])
-            //endregion
 
             while (true) {
                 instance.getTorrents().forEach {
+//                    tests serialization
                     val rit : Torrent = gson.fromJson(gson.toJson(it), genericType<Torrent>())
                     println(rit)
 
@@ -59,14 +59,22 @@ fun main(args: Array<String>) {
                         ftp.setFileType(FTP.BINARY_FILE_TYPE)
 
                         println(ftp.replyCode)
-                        ftp.listFiles(it.location).forEach {fi ->
-                            if (fi.isFile) {
-                                val dlFile = File(downloadDirectory + "\\" + fi.name)
+
+                        getFilesRecursive(it.location, ftp).forEach { fi, isDirectory ->
+                            if (!isDirectory) {
+                                val dlFile = File(downloadDirectory + fi.substring(File(it.location).parent.length).replace("/", System.getProperty("file.separator")))
+                                val parent = File(dlFile.parent)
+                                if (!parent.exists()) {
+                                    parent.mkdirs()
+                                }
                                 val stream = BufferedOutputStream(FileOutputStream(dlFile))
-                                println(ftp.retrieveFile(it.location + "/"+ fi.name, stream))
+                                println(ftp.retrieveFile(fi, stream))
                                 stream.close()
                             }
+
                         }
+
+
 
 
                     }
@@ -89,8 +97,15 @@ fun main(args: Array<String>) {
 
 }
 
-
-
-fun serializeTorrent(torrent: Torrent) {
-
+fun getFilesRecursive(initialDir: String, ftp: FTPClient): HashMap<String, Boolean> {
+    val directories = HashMap<String, Boolean>()
+    ftp.listFiles(initialDir).forEach {
+        if (it.isDirectory) {
+            directories.put(initialDir + "/" + it.name, true)
+            directories.putAll(getFilesRecursive(initialDir + "/" + it.name, ftp))
+        } else {
+            directories.put(initialDir + "/" + it.name, false);
+        }
+    }
+    return directories
 }
