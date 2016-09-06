@@ -1,8 +1,7 @@
 package com.eagles13.rut_downloader
 
-import com.eagles13.rutorrent.Credentials
-import com.eagles13.rutorrent.Requests.TorrentRequest
 import com.eagles13.rutorrent.Torrent
+import com.eagles13.rutorrent.ruTorrent
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.apache.commons.net.ftp.FTP
@@ -18,13 +17,6 @@ import java.util.concurrent.Executors
  * Created by Joshua on 12/06/2016.
  */
 inline fun <reified T> genericType() = object: TypeToken<T>() {}.type!!
-
-
-class ruTorrent(val url: String, val username: String, val password: String) {
-    fun getTorrents(): ArrayList<Torrent> {
-        return TorrentRequest(Credentials(url, username, password), "plugins/rpc/rpc.php").getTorrents()
-    }
-}
 
 fun main(args: Array<String>) {
     val downloadDirectory = "D:\\Download"
