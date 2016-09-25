@@ -1,4 +1,4 @@
-# rutorrent-kotlin
+# ruTorrent-kotlin
 A Kotlin library for interacting with the ruTorrent web client. The library lets you pull torrent details (hash, name, file size, location on disk, whether the torrent has finished downloading).
 Plans for extensions to upload torrents, and to delete torrents are in the works.
 
